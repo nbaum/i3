@@ -109,6 +109,19 @@ static bool any_randr_output_active(void) {
 }
 
 /*
+ * Returns the active (!) output which contains the pointer or NULL
+ * if there is no output which contains the pointer.
+ */
+Output *get_output_containing_pointer() {
+    xcb_query_pointer_reply_t *reply = xcb_query_pointer_reply(conn, xcb_query_pointer(conn, root), NULL);
+    if (reply == NULL) {
+        ELOG("could not query pointer position, no output contains pointer\n");
+        return NULL;
+    }
+    return get_output_containing(reply->root_x, reply->root_y);
+}
+
+/*
  * Returns the active (!) output which contains the coordinates x, y or NULL
  * if there is no output which contains these coordinates.
  *

@@ -82,6 +82,13 @@ Output *get_first_output(void);
 Output *get_output_by_name(const char *name, const bool require_active);
 
 /**
+ * Returns the active (!) output which contains the pointer or NULL
+ * if there is no output which contains the pointer.
+ *
+ */
+Output *get_output_containing_pointer();
+
+/**
  * Returns the active (!) output which contains the coordinates x, y or NULL
  * if there is no output which contains these coordinates.
  *
