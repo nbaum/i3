@@ -900,7 +900,7 @@ void cmd_workspace_number(I3_CMD, const char *which, const char *_no_auto_back_a
     if (!workspace) {
         LOG("There is no workspace with number %ld, creating a new one.\n", parsed_num);
         ysuccess(true);
-        workspace_show_by_name(which);
+        workspace_show_by_num(which);
         cmd_output->needs_tree_render = true;
         return;
     }

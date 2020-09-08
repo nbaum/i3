@@ -61,6 +61,17 @@ bool output_triggers_assignment(Output *output, struct Workspace_Assignment *ass
  * workspace has just been created.
  *
  */
+Con *workspace_get_num(const char *num, bool *created);
+
+/**
+ * Returns a pointer to the workspace with the given number (starting at 0),
+ * creating the workspace if necessary (by allocating the necessary amount of
+ * memory and initializing the data structures correctly).
+ *
+ * If created is not NULL, *created will be set to whether or not the
+ * workspace has just been created.
+ *
+ */
 Con *workspace_get(const char *num, bool *created);
 
 /**
@@ -93,6 +104,12 @@ bool workspace_is_visible(Con *ws);
  *
  */
 void workspace_show(Con *ws);
+
+/**
+ * Looks up the workspace by name and switches to it.
+ *
+ */
+void workspace_show_by_num(const char *num);
 
 /**
  * Looks up the workspace by name and switches to it.

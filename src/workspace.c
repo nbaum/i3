@@ -50,15 +50,9 @@ Con *get_existing_workspace_by_num(int num) {
       output = xoutput->con;
     if (output == NULL)
       output = con_get_output(focused);
-    if (output != NULL) {
-      GREP_FIRST(workspace, output_get_content(output), child->num == num);
-      if (workspace)
-        return workspace;
-    }
-    TAILQ_FOREACH (output, &(croot->nodes_head), nodes) {
-        GREP_FIRST(workspace, output_get_content(output), child->num == num);
-    }
-
+    if (output == NULL)
+      return NULL;
+    GREP_FIRST(workspace, output_get_content(output), child->num == num);
     return workspace;
 }
 
@@ -130,6 +124,58 @@ bool output_triggers_assignment(Output *output, struct Workspace_Assignment *ass
 
 /*
  * Returns a pointer to the workspace with the given number (starting at 0),
+ * creating the workspace if necessary (by allocating the necessary amount of
+ * memory and initializing the data structures correctly).
+ *
+ */
+Con *workspace_get_num(const char *num, bool *created) {
+    long parsed_num = ws_name_to_number(num);
+
+    Con *workspace = get_existing_workspace_by_num((int) parsed_num);
+
+    if (workspace == NULL) {
+        LOG("Creating new workspace %s\n", num);
+
+        Con *output = get_assigned_output(num, parsed_num);
+        /* if an assignment is not found, we create this workspace on the current output */
+        if (!output) {
+            output = con_get_output(focused);
+        }
+
+        Con *content = output_get_content(output);
+        LOG("got output %p with content %p\n", output, content);
+        /* We need to attach this container after setting its type. con_attach
+         * will handle CT_WORKSPACEs differently */
+        workspace = con_new(NULL, NULL);
+        char *name;
+        sasprintf(&name, "[i3 con] workspace %s", num);
+        x_set_name(workspace, name);
+        free(name);
+        workspace->type = CT_WORKSPACE;
+        FREE(workspace->name);
+        workspace->name = sstrdup(num);
+        workspace->workspace_layout = config.default_layout;
+        workspace->num = parsed_num;
+        LOG("num = %d\n", workspace->num);
+
+        workspace->parent = content;
+        _workspace_apply_default_orientation(workspace);
+
+        con_attach(workspace, content, false);
+
+        ipc_send_workspace_event("init", workspace, NULL);
+        ewmh_update_desktop_properties();
+        if (created != NULL)
+            *created = true;
+    } else if (created != NULL) {
+        *created = false;
+    }
+
+    return workspace;
+}
+
+/*
+ * Returns a pointer to the workspace with the given name,
  * creating the workspace if necessary (by allocating the necessary amount of
  * memory and initializing the data structures correctly).
  *
@@ -557,6 +603,16 @@ void workspace_show(Con *workspace) {
 
     /* Push any sticky windows to the now visible workspace. */
     output_push_sticky_windows(old_focus);
+}
+
+/*
+ * Looks up the workspace by name and switches to it.
+ *
+ */
+void workspace_show_by_num(const char *num) {
+    Con *workspace;
+    workspace = workspace_get_num(num, NULL);
+    workspace_show(workspace);
 }
 
 /*
