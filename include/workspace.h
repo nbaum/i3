@@ -71,7 +71,18 @@ bool output_triggers_assignment(Output *output, struct Workspace_Assignment *ass
  * memory and initializing the data structures correctly).
  *
  */
-Con *workspace_get(const char *num);
+Con *workspace_get_num(const char *num, bool *created);
+
+/**
+ * Returns a pointer to the workspace with the given number (starting at 0),
+ * creating the workspace if necessary (by allocating the necessary amount of
+ * memory and initializing the data structures correctly).
+ *
+ * If created is not NULL, *created will be set to whether or not the
+ * workspace has just been created.
+ *
+ */
+Con *workspace_get(const char *num, bool *created);
 
 /**
  * Extracts workspace names from keybindings (e.g. “web” from “bindsym $mod+1
@@ -103,6 +114,12 @@ bool workspace_is_visible(Con *ws);
  *
  */
 void workspace_show(Con *ws);
+
+/**
+ * Looks up the workspace by name and switches to it.
+ *
+ */
+void workspace_show_by_num(const char *num);
 
 /**
  * Looks up the workspace by name and switches to it.
