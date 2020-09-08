@@ -38,11 +38,23 @@ Con *get_existing_workspace_by_name(const char *name) {
 
 /*
  * Returns the workspace with the given number or NULL if such a workspace does
- * not exist.
+ * not exist. First searches the output with the pointer in, or the output containing
+ * the focused window if no output contains the pointer, then searches all
+ * outputs in some order.
  *
  */
 Con *get_existing_workspace_by_num(int num) {
     Con *output, *workspace = NULL;
+    Output *xoutput = get_output_containing_pointer();
+    if (xoutput != NULL)
+      output = xoutput->con;
+    if (output == NULL)
+      output = con_get_output(focused);
+    if (output != NULL) {
+      GREP_FIRST(workspace, output_get_content(output), child->num == num);
+      if (workspace)
+        return workspace;
+    }
     TAILQ_FOREACH (output, &(croot->nodes_head), nodes) {
         GREP_FIRST(workspace, output_get_content(output), child->num == num);
     }
