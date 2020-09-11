@@ -390,7 +390,7 @@ void cmd_move_con_to_workspace_number(I3_CMD, const char *which, const char *no_
 
     Con *ws = get_existing_workspace_by_num(parsed_num);
     if (!ws) {
-        ws = workspace_get(which, NULL);
+        ws = workspace_get_num(which, NULL);
     }
 
     if (no_auto_back_and_forth == NULL) {
