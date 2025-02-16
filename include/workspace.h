@@ -82,7 +82,7 @@ Con *workspace_get_num(const char *num, bool *created);
  * workspace has just been created.
  *
  */
-Con *workspace_get(const char *num, bool *created);
+Con *workspace_get(const char *num);
 
 /**
  * Extracts workspace names from keybindings (e.g. “web” from “bindsym $mod+1

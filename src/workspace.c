@@ -186,7 +186,7 @@ Con *workspace_get_num(const char *num, bool *created) {
  * memory and initializing the data structures correctly).
  *
  */
-Con *workspace_get(const char *num, bool *created) {
+Con *workspace_get(const char *num) {
     Con *workspace = get_existing_workspace_by_name(num);
     if (workspace) {
         return workspace;
