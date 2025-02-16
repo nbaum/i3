@@ -1,6 +1,6 @@
 # vim:ts=2:sw=2:expandtab
 #
-# i3 - an improved dynamic tiling window manager
+# i3 - an improved tiling window manager
 # © 2009 Michael Stapelberg and contributors (see also: LICENSE)
 #
 # parser-specs/config.spec: Specification file for generate-command-parser.pl
@@ -139,6 +139,15 @@ state FLOATING_MODIFIER:
       ->
   end
       -> call cfg_floating_modifier($modifiers)
+
+# tiling_drag swap_modifier <modifier>
+state TILING_DRAG_SWAP_MODIFIER:
+  modifiers = 'Mod1', 'Mod2', 'Mod3', 'Mod4', 'Mod5', 'Shift', 'Control', 'Ctrl'
+      ->
+  '+'
+      ->
+  end
+      -> call cfg_tiling_drag_swap_modifier($modifiers)
 
 # default_orientation <horizontal|vertical|auto>
 state DEFAULT_ORIENTATION:
@@ -378,6 +387,8 @@ state TILING_DRAG_MODE:
 state TILING_DRAG:
   off = '0', 'no', 'false', 'off', 'disable', 'inactive'
       -> call cfg_tiling_drag($off)
+  swap_modifier = 'swap_modifier'
+      -> TILING_DRAG_SWAP_MODIFIER
   value = 'modifier', 'titlebar'
       -> TILING_DRAG_MODE
 
