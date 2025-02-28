@@ -684,12 +684,12 @@ static void handle_net_wm_state_change(Con *con, uint32_t change, uint32_t atom)
         DLOG("Received a client message to %s _NET_WM_STATE_FULLSCREEN.\n", debug_change);
 
         /* Check if the fullscreen state should be toggled */
-        if (change == _NET_WM_STATE_TOGGLE ||
-            (con->fullscreen_mode != CF_NONE && change == _NET_WM_STATE_REMOVE) ||
-            (con->fullscreen_mode == CF_NONE && change == _NET_WM_STATE_ADD)) {
-            DLOG("toggling fullscreen\n");
-            con_toggle_fullscreen(con, CF_OUTPUT);
-        }
+        // if (change == _NET_WM_STATE_TOGGLE ||
+        //     (con->fullscreen_mode != CF_NONE && change == _NET_WM_STATE_REMOVE) ||
+        //     (con->fullscreen_mode == CF_NONE && change == _NET_WM_STATE_ADD)) {
+        //     DLOG("toggling fullscreen\n");
+        //     con_toggle_fullscreen(con, CF_OUTPUT);
+        // }
     } else if (atom == A__NET_WM_STATE_DEMANDS_ATTENTION) {
         DLOG("Received a client message to %s _NET_WM_STATE_DEMANDS_ATTENTION.\n", debug_change);
 
